@@ -1,6 +1,68 @@
-﻿@page "/DeleteEmployee"
-<h3>DeleteEmployee</h3>
+﻿@page "/DeleteEmployee/{Id}"
+@inject EmployeeService  EmployeeService
+@inject NavigationManager  NavigationManager
+
+<h2>Delete Employee</h2>
+<hr />
+
+<h3>Are you sure want to delete This?</h3>
+<div class="row">
+    <div class="col-md-8">
+
+        <div class="form-group">
+            <label>Employee Id:</label>
+            <label>@employee.EmployeeId</label>
+        </div>
+
+        <div class="form-group">
+            <label>Name:</label>
+            <label>@employee.Name</label>
+        </div>
+
+        <div class="form-group">
+            <label>Gender:</label>
+            <label>@employee.Gender</label>
+        </div>
+
+        <div class="form-group">
+            <label>Country:</label>
+            <label>@employee.Country</label>
+        </div>
+
+        <div class="form-group">
+            <label>City:</label>
+            <label>@employee.City</label>
+        </div>
+
+        <input type="button" class="btn btn-primary" @onclick="@DeleteEmployees" value="Delete" />
+
+        <input type="button" class="btn btn-info" @onclick="@Cancel" value="Cancel" />
+
+    </div>
+    
+</div>
+
 
 @code {
+
+    [Parameter]
+    public string Id { get; set; }
+    BlazorCRUD.Data.Employee employee = new Data.Employee();
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await Task.Run(() => EmployeeService.GetEmployeeById(Convert.ToInt32(Id)));
+    }
+
+    protected void DeleteEmployees()
+    {
+        EmployeeService.DeleteEmployee(employee);
+        NavigationManager.NavigateTo("Employee");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Employee");
+    }
 
 }
